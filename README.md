@@ -8,6 +8,7 @@ https://www.python.org/downloads/release/python-385/
 2. Open a terminal window, navigate to the local repo folder on your computer from step 2.
 
 3. Install the project dependencies using this command in the terminal window:
+
 `python -m pip install -r requirements.txt`
 
 4. Run the web app with this command:
