@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <link rel="stylesheet" href='/static/main.css' />
+    <title>Register for an account</title>
+  </head>
+  <body>
+
+	{% if current_user.is_authenticated %}
+	  <h1>Hi {{ current_user.username }}!</h1>
+	{% endif %}
+
+	<div class="container">
+		<p>Current Balance: {{current_user.balance}}</p>
+		
+		<b><p>Withdraw money</p></b>
+		<form action="/withdraw" method="POST">
+		<input type="text" id="withdraw_amount_whole" required  placeholder="Amount to withdraw" name="withdraw_amount_whole" />
+		<input type="text" id="withdraw_amount_fraction" size="2" minlength="2" maxlength="2" required  placeholder="Cents" name="withdraw_amount_fraction" />
+		<br>
+		<input type="submit" value="Withdraw" />
+		</form>
+		
+		<b><p>Deposit money</p></b>
+		<form action="/deposit" method="POST">
+		<input type="text" id="deposit_amount_whole" required  placeholder="Amount to deposit"  name="deposit_amount_whole" />
+		<input type="text" id="deposit_amount_fraction" size="2" minlength="2" maxlength="2" required  placeholder="Cents" name="deposit_amount_fraction" />
+		<br>
+		<input type="submit" value="Deposit" />
+		</form>
+
+
+		<a style="font-size:28px;" href="{{ url_for('logout') }}">Logout</a>
+
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<script>
+			var messages = {{ messages | safe }};
+			for (var i=0; i < messages.length; i++) {
+				alert(messages[i]);
+			}
+			</script>
+		{% endif %}
+		{% endwith %}
+
+	</div>
+
+</body>
+</html>

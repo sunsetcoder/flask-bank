@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <link rel="stylesheet" href='/static/main.css' />
+    <title>Register for an account</title>
+  </head>
+  <body>
+    <div class="container">  
+    <h1 style="color:blue">Register a new account</h1>
+    <form method="POST">
+	
+        <input type="text" id="username" name="username" required  placeholder="Enter Username"    value="{{request.form.username}}"  />
+    
+		<br>
+    
+        <input type="password" id="password" name="password" required placeholder="Enter Password"    value="{{request.form.password}}"  />
+    
+	    <br>
+	
+        <input type="balance_whole" id="balance_whole" name="balance_whole" required  placeholder="Enter Initial Balance"   value="{{request.form.balance_whole}}"  />
+        <input type="balance_fraction" id="balance_fraction" name="balance_fraction" size="2" minlength="2" maxlength="2"  required  placeholder="Cents"   value="{{request.form.balance_fraction}}"  />
+    
+		<br>
+
+        <input type="submit" value="Register" />
+    <br>
+    <a href="{{ url_for('login') }}">Already registered? Log in</a>
+
+	</div>
+    </form>
+
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+        var messages = {{ messages | safe }};
+        for (var i=0; i < messages.length; i++) {
+            alert(messages[i]);
+        }
+        </script>
+    {% endif %}
+    {% endwith %}
+    
+  
+  </body>
+</html>
+
+
+

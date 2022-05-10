@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <link rel="stylesheet" href='/static/main.css' />
+    <title>Login</title>
+  </head>
+  <body>
+	
+    <h1>LOGIN</h1>
+
+    <form method="POST">
+	<div class="container">  
+        <input type="text" id="username" name="username" required placeholder="Enter Username"  value="{{request.form.username}}" />
+    
+	<br>
+    
+        <input type="password" id="password" name="password" required placeholder="Enter Password"  value="{{request.form.password}}" />
+    
+	<br>
+    <input type="submit" value="Login" />
+    <br>
+    <a href="{{ url_for('register') }}">Need to open an account? Click here to register.</a>
+	</div>
+    </form>
+
+    {% if error %}
+    <p style="color:yellow" >Login Failed</p>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+        var messages = {{ messages | safe }};
+        for (var i=0; i < messages.length; i++) {
+            alert(messages[i]);
+        }
+        </script>
+    {% endif %}
+    {% endwith %}
+
+
+  </body>
+</html>
+
+
+
