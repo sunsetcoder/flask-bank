@@ -4,6 +4,7 @@
 https://www.python.org/downloads/release/python-385/
 
 2. Git clone (or download and unzip) this repo.
+`git clone https://github.com/sunsetcoder/flask-bank.git`
 
 2. Open a terminal window, navigate to the local repo folder on your computer from step 2.
 
