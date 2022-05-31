@@ -7,8 +7,7 @@ from extensions import db
 from validators import *
 from decimal import Decimal
 import sqlite3
-from os import environ
-environ['WERKZEUG_DEBUG_PIN'] = "off"
+from passlib.hash import sha256_crypt
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
 
@@ -18,10 +17,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
-    app.config['TESTING'] = "True"
-    app.config['WERKZEUG_DEBUG_PIN'] = 'off'
     app.secret_key = SECRET_KEY
-    app.WERKZEUG_DEBUG_PIN = "off"
     login_manager.init_app(app)
     db.init_app(app)
     return app
@@ -66,7 +62,6 @@ def login():
         return redirect(url_for('account'))
 
     if request.method == 'POST':
-        print("request method is POST (login)")
         username = request.form['username']
         password = request.form['password']
         # validate username and password using whitelist pattern:
@@ -77,9 +72,13 @@ def login():
                 if user.check_password(password): # if correct password supplied
                     login_user(user)
                     return redirect(url_for('account'))
-                else:
+                else: # invalid password
+                    error = 'Invalid username or password'
                     flash("Invalid username or password")
-        else:
+            else: # invalid username
+                error = 'Invalid username or password'
+                flash("Invalid username or password")
+        else: # invalid username and/or password input
             error = 'invalid_input'
             flash('invalid_input')
     return render_template('login.html', error = error)
@@ -99,15 +98,16 @@ def register():
         balance_fraction = request.form.get("balance_fraction")
         # whitelist valid user input according to allowed pattern:
         balance = Number(balance_whole, balance_fraction).number
-        if validAccountNameOrPassword(password) and (balance is not None):
+        if validAccountNameOrPassword(username) and validAccountNameOrPassword(password) and (balance is not None):
             # check if username already exists
             conn = sqlite3.connect('bank.db')
             c = conn.cursor()
-            c.executescript(f"SELECT * FROM users WHERE username = '{username}'")
+            user = User.query.filter_by(username=username).first()
             user_exists = c.fetchone()
             conn.commit()
             # store in db if user doesn't exist:
             if user_exists is None:
+                password = sha256_crypt.hash(password)
                 user = User(username=username,
                                 password=password, 
                                 balance=balance)
@@ -173,4 +173,4 @@ def unauthorized():
     return redirect(url_for('login'))
 
 if __name__ == "__main__":
-    app.run(host='localhost', debug=True, port=4000)
+    app.run(host='localhost', debug=False, port=4000)
