@@ -13,3 +13,4 @@ SQLAlchemy==1.4.36
 Werkzeug==2.1.2
 wincertstore==0.2
 zipp==3.8.0
+passlib==1.7.4
